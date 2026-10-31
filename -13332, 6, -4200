@@ -472,10 +472,6 @@ autoRaceSwitch = tabs.race:AddSwitch("Iniciar Auto Carrera", function(state)
                         end
                     end
                     
-                    -- Activar Muro Invisible y Monitor de Pasos al iniciar ciclo
-                    spawnInvisibleWall()
-                    startWallMonitor()
-                    
                     -- PHASE 1: QUEUE ZONE
                     tabs.race.StatusLabel.Text = "Estado: Yendo a QueueZone..."
                     local queueZone = gym:FindFirstChild("Lobby") 
@@ -510,6 +506,14 @@ autoRaceSwitch = tabs.race:AddSwitch("Iniciar Auto Carrera", function(state)
                                     local laneNumber = tonumber(string.match(assignedLane.Name, "%d+")) or 1
                                     local exactTargetPosition = CONFIG.LaneCoordinates[laneNumber]
                                     local exactFinishPosition = CONFIG.FinishCoordinates[laneNumber] or (fallbackFinish and fallbackFinish.Position)
+                                    
+                                    -- CONTROL DEL MURO INVISIBLE SEGÚN EL CARRIL DETECTADO
+                                    if laneNumber == 6 or string.find(assignedLane.Name:lower(), "06") then
+                                        removeInvisibleWall() -- No crear muro en Line06 / Lane06
+                                    else
+                                        spawnInvisibleWall()
+                                        startWallMonitor()
+                                    end
                                     
                                     -- PHASE 3: TELEPORT TO EXACT SECTION 1 END
                                     tabs.race.StatusLabel.Text = "Estado: TP Sección 1 (" .. assignedLane.Name .. ")..."
