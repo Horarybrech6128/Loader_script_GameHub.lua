@@ -1,0 +1,633 @@
+-- ==========================================
+-- KEY SYSTEM & WHITELIST
+-- ==========================================
+local coreGui = game:GetService("CoreGui")
+local players = game:GetService("Players")
+local localPlayer = players.LocalPlayer
+
+local correctKey = "LosVaguens"
+local verified = false
+local keyFileName = "LosVaguens_Key.txt"
+
+local whitelistedPlayers = {
+    "juest20017",
+    "andreygamer014",
+    "JKK_000X",
+    "maicolinpinqu",
+    "hoal_mebanearonsoypa",
+    "CLK_DFF",
+    "xxxcrisgamerproxx",
+}
+
+-- 1. Verificar Whitelist
+for _, username in ipairs(whitelistedPlayers) do
+    if localPlayer.Name == username then
+        verified = true
+        break
+    end
+end
+
+-- 2. Verificar Key Guardada
+if not verified then
+    pcall(function()
+        if isfile and readfile and isfile(keyFileName) then
+            local savedKey = readfile(keyFileName)
+            if savedKey == correctKey then
+                verified = true
+            end
+        end
+    end)
+end
+
+-- 3. Mostrar Interfaz de Key si no está verificado
+if not verified then
+    local screenGui = Instance.new("ScreenGui")
+    screenGui.Name = "Proyectados Hub Key System"
+    screenGui.Parent = coreGui or localPlayer:WaitForChild("PlayerGui")
+    screenGui.ResetOnSpawn = false
+
+    local mainFrame = Instance.new("Frame")
+    mainFrame.Name = "MainFrame"
+    mainFrame.Size = UDim2.new(0.85, 0, 0.6, 0)
+    mainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
+    mainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+    mainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
+    mainFrame.BorderSizePixel = 0
+    mainFrame.Active = true
+    mainFrame.Draggable = true
+    mainFrame.Parent = screenGui
+
+    local sizeConstraint = Instance.new("UISizeConstraint")
+    sizeConstraint.MaxSize = Vector2.new(380, 290)
+    sizeConstraint.MinSize = Vector2.new(280, 220)
+    sizeConstraint.Parent = mainFrame
+
+    local uiCorner = Instance.new("UICorner")
+    uiCorner.CornerRadius = UDim.new(0, 10)
+    uiCorner.Parent = mainFrame
+
+    local uiStroke = Instance.new("UIStroke")
+    uiStroke.Color = Color3.fromRGB(138, 43, 226)
+    uiStroke.Thickness = 2
+    uiStroke.Parent = mainFrame
+
+    local titleLabel = Instance.new("TextLabel")
+    titleLabel.Size = UDim2.new(1, 0, 0, 40)
+    titleLabel.Position = UDim2.new(0, 0, 0, 15)
+    titleLabel.Text = "PROYECTADOS HUB"
+    titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    titleLabel.BackgroundTransparency = 1
+    titleLabel.Font = Enum.Font.GothamBold
+    titleLabel.TextSize = 20
+    titleLabel.Parent = mainFrame
+
+    local subTitle = Instance.new("TextLabel")
+    subTitle.Size = UDim2.new(1, 0, 0, 25)
+    subTitle.Position = UDim2.new(0, 0, 0, 50)
+    subTitle.Text = "Introduce La Key"
+    subTitle.TextColor3 = Color3.fromRGB(180, 180, 180)
+    subTitle.BackgroundTransparency = 1
+    subTitle.Font = Enum.Font.Gotham
+    subTitle.TextSize = 14
+    subTitle.Parent = mainFrame
+
+    local textBox = Instance.new("TextBox")
+    textBox.Size = UDim2.new(0.85, 0, 0, 42)
+    textBox.Position = UDim2.new(0.5, 0, 0.33, 0)
+    textBox.AnchorPoint = Vector2.new(0.5, 0)
+    textBox.PlaceholderText = "Escribe La Key aquí..."
+    textBox.Text = ""
+    textBox.BackgroundColor3 = Color3.fromRGB(35, 35, 45)
+    textBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+    textBox.PlaceholderColor3 = Color3.fromRGB(120, 120, 120)
+    textBox.Font = Enum.Font.Gotham
+    textBox.TextSize = 15
+    textBox.Parent = mainFrame
+
+    local tbCorner = Instance.new("UICorner")
+    tbCorner.CornerRadius = UDim.new(0, 8)
+    tbCorner.Parent = textBox
+
+    local submitButton = Instance.new("TextButton")
+    submitButton.Size = UDim2.new(0.85, 0, 0, 42)
+    submitButton.Position = UDim2.new(0.5, 0, 0.53, 0)
+    submitButton.AnchorPoint = Vector2.new(0.5, 0)
+    submitButton.Text = "Verificar Key"
+    submitButton.BackgroundColor3 = Color3.fromRGB(138, 43, 226)
+    submitButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    submitButton.Font = Enum.Font.GothamBold
+    submitButton.TextSize = 15
+    submitButton.Parent = mainFrame
+
+    local btnCorner = Instance.new("UICorner")
+    btnCorner.CornerRadius = UDim.new(0, 8)
+    btnCorner.Parent = submitButton
+
+    local getKeyButton = Instance.new("TextButton")
+    getKeyButton.Size = UDim2.new(0.85, 0, 0, 42)
+    getKeyButton.Position = UDim2.new(0.5, 0, 0.73, 0)
+    getKeyButton.AnchorPoint = Vector2.new(0.5, 0)
+    getKeyButton.Text = "OBTENER KEY"
+    getKeyButton.BackgroundColor3 = Color3.fromRGB(138, 43, 226)
+    getKeyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    getKeyButton.Font = Enum.Font.GothamBold
+    getKeyButton.TextSize = 14
+    getKeyButton.Parent = mainFrame
+
+    local getKeyCorner = Instance.new("UICorner")
+    getKeyCorner.CornerRadius = UDim.new(0, 8)
+    getKeyCorner.Parent = getKeyButton
+
+    getKeyButton.MouseButton1Click:Connect(function()
+        pcall(function()
+            if setclipboard then
+                setclipboard("https://link-center.net/10253076/q1AAl7og4pTF")
+            end
+        end)
+        getKeyButton.Text = "Link copiado al portapapeles"
+        task.wait(2)
+        getKeyButton.Text = "OBTENER KEY"
+    end)
+
+    submitButton.MouseButton1Click:Connect(function()
+        if textBox.Text == correctKey then
+            verified = true
+            pcall(function()
+                if writefile then
+                    writefile(keyFileName, correctKey)
+                end
+            end)
+            screenGui:Destroy()
+        else
+            textBox.Text = ""
+            textBox.PlaceholderText = "No Quieres Proyectarte?"
+            textBox.PlaceholderColor3 = Color3.fromRGB(255, 80, 80)
+        end
+    end)
+
+    task.spawn(function()
+        task.wait(60)
+        if not verified then
+            pcall(function()
+                localPlayer:Kick("No podrás Proyectarte junto Nosotros")
+            end)
+        end
+    end)
+end
+
+-- Bloquea la ejecución hasta ser verificado
+while not verified do
+    task.wait(0.1)
+end
+
+-- ==========================================
+-- SERVICES AND LOCAL VARIABLES
+-- ==========================================
+local runService = game:GetService("RunService")
+local workspace = game:GetService("Workspace")
+local virtualUser = game:GetService("VirtualUser")
+local virtualInputManager = game:GetService("VirtualInputManager")
+
+-- Anti-AFK connection to prevent disconnection
+localPlayer.Idled:Connect(function()
+    virtualUser:CaptureController()
+    virtualUser:ClickButton2(Vector2.new())
+end)
+
+-- ==========================================
+-- CONFIGURATION & LANE COORDINATES MAP
+-- ==========================================
+local CONFIG = {
+    Running = false,
+    DefaultWalkSpeed = 16,
+    LiftWalkSpeed = 45,
+    SprintWalkSpeed = 60,
+    SectionWaitTime = 5,
+    TargetCPS = 5, -- 5 clicks per second
+    -- Detector de línea de salida (radio 10m)
+    StartLinePos = Vector3.new(-12640, 6, -4197),
+    StartLineRadius = 10,
+    -- Configuración del Muro Invisible Global
+    WallPosition = Vector3.new(-13549, 6, -4192), -- Centro Z que cubre todas las líneas
+    WallSize = Vector3.new(5, 20, 180),          -- Grosor = 5, Alto = 20, Largo = 180 studs
+    WallTriggerX = -13500,                         -- Coordenada X donde debe pasar 2 veces
+    -- Exact end coordinates of Section 1 for each Line (1 to 10)
+    LaneCoordinates = {
+        [1]  = Vector3.new(-13331, 6, -4129),
+        [2]  = Vector3.new(-13330, 6, -4143),
+        [3]  = Vector3.new(-13332, 6, -4155),
+        [4]  = Vector3.new(-13332, 6, -4170),
+        [5]  = Vector3.new(-13332, 6, -4184),
+        [6]  = Vector3.new(-13332, 6, -4200),
+        [7]  = Vector3.new(-13333, 6, -4214),
+        [8]  = Vector3.new(-13334, 6, -4228),
+        [9]  = Vector3.new(-13335, 6, -4242),
+        [10] = Vector3.new(-13335, 6, -4256),
+    },
+    -- Exact FINISH coordinates to keep each line straight
+    FinishCoordinates = {
+        [1]  = Vector3.new(-14544, 6, -4128),
+        [2]  = Vector3.new(-14544, 6, -4143),
+        [3]  = Vector3.new(-14544, 6, -4155),
+        [4]  = Vector3.new(-14544, 6, -4170),
+        [5]  = Vector3.new(-14544, 6, -4184),
+        [6]  = Vector3.new(-14544, 6, -4200),
+        [7]  = Vector3.new(-14544, 6, -4214),
+        [8]  = Vector3.new(-14544, 6, -4228),
+        [9]  = Vector3.new(-14544, 6, -4242),
+        [10] = Vector3.new(-14544, 6, -4256),
+    }
+}
+
+-- ==========================================
+-- UI LIBRARY INITIALIZATION
+-- ==========================================
+local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/horarybrech/Hub/refs/heads/main/ProyectadosUiV2.luau?cache=" .. tostring(os.time()), true))()
+
+local window = library:AddWindow("Proyectados Hub | Auto Brawl Race", {
+    main_color = Color3.fromRGB(138, 43, 226),
+    min_size = Vector2.new(500, 500),
+    can_resize = true,
+})
+
+local tabs = {
+    race = window:AddTab("Auto Carrera"),
+    character = window:AddTab("Modificadores")
+}
+
+-- ==========================================
+-- HELPER FUNCTIONS (MOVEMENT & CHARACTER)
+-- ==========================================
+local function getCharacterParts()
+    local character = localPlayer.Character
+    if not character then return nil, nil, nil end
+    local rootPart = character:FindFirstChild("HumanoidRootPart")
+    local humanoid = character:FindFirstChildOfClass("Humanoid")
+    if rootPart and humanoid and humanoid.Health > 0 then
+        return character, rootPart, humanoid
+    end
+    return nil, nil, nil
+end
+
+local function teleportTo(targetCFrame)
+    local _, rootPart = getCharacterParts()
+    if rootPart then
+        rootPart.CFrame = targetCFrame
+    end
+end
+
+local function resetWalkSpeed()
+    local _, _, humanoid = getCharacterParts()
+    if humanoid then
+        humanoid.WalkSpeed = CONFIG.DefaultWalkSpeed
+        humanoid.PlatformStand = false
+    end
+end
+
+local function waitCancelable(seconds)
+    local elapsed = 0
+    while elapsed < seconds do
+        if not CONFIG.Running then return false end
+        task.wait(0.05)
+        elapsed = elapsed + 0.05
+    end
+    return true
+end
+
+local function getTargetPart(segment)
+    if not segment then return nil end
+    if segment:IsA("BasePart") then return segment end
+    local hitPart = segment:FindFirstChild("Hitbox") or segment:FindFirstChild("TouchPart") or segment.PrimaryPart
+    if hitPart then return hitPart end
+    for _, child in ipairs(segment:GetDescendants()) do
+        if child:IsA("BasePart") then 
+            return child 
+        end
+    end
+    return nil
+end
+
+local function walkTo(targetPosition)
+    local _, rootPart, humanoid = getCharacterParts()
+    if not rootPart or not humanoid then return end
+    
+    for _, velocityObj in ipairs(rootPart:GetChildren()) do
+        if velocityObj:IsA("BodyVelocity") or velocityObj:IsA("BodyGyro") or velocityObj:IsA("LinearVelocity") then 
+            velocityObj:Destroy() 
+        end
+    end
+    humanoid.PlatformStand = false
+    
+    while CONFIG.Running do
+        local _, currentRoot, currentHumanoid = getCharacterParts()
+        if not currentRoot or not currentHumanoid then break end
+        
+        local currentPosition = currentRoot.Position
+        local distance = (Vector3.new(targetPosition.X, 0, targetPosition.Z) - Vector3.new(currentPosition.X, 0, currentPosition.Z)).Magnitude
+        if distance < 4 then break end 
+        
+        currentHumanoid:MoveTo(targetPosition)
+        task.wait(0.1)
+    end
+    
+    local _, _, finalHumanoid = getCharacterParts()
+    if finalHumanoid then
+        finalHumanoid:Move(Vector3.zero)
+    end
+end
+
+local function getClosestLane(lanesFolder, rootPart)
+    local closestLane = nil
+    local minDistance = math.huge
+    for _, lane in ipairs(lanesFolder:GetChildren()) do
+        local segments = lane:FindFirstChild("Segments")
+        if segments then
+            local startSegment = segments:FindFirstChild("01_AgilityDash")
+            local targetPart = getTargetPart(startSegment)
+            if targetPart then
+                local distance = (rootPart.Position - targetPart.Position).Magnitude
+                if distance < minDistance then
+                    minDistance = distance
+                    closestLane = lane
+                end
+            end
+        end
+    end
+    return closestLane
+end
+
+-- ==========================================
+-- GESTOR DE MURO INVISIBLE E INTERRUPTOR POR 2º PASO
+-- ==========================================
+local globalWallPart = nil
+local wallPassesCount = 0
+local isMonitoringWall = false
+
+local function spawnInvisibleWall()
+    if globalWallPart and globalWallPart.Parent then
+        globalWallPart.CanCollide = true
+        return
+    end
+    
+    local wall = Instance.new("Part")
+    wall.Name = "ProyectadosInvisibleWall"
+    wall.Size = CONFIG.WallSize
+    wall.CFrame = CFrame.new(CONFIG.WallPosition)
+    wall.Anchored = true
+    wall.CanCollide = true
+    wall.Transparency = 1
+    wall.Parent = workspace
+
+    globalWallPart = wall
+    wallPassesCount = 0
+end
+
+local function removeInvisibleWall()
+    if globalWallPart then
+        globalWallPart.CanCollide = false
+        globalWallPart:Destroy()
+        globalWallPart = nil
+    end
+    wallPassesCount = 0
+    isMonitoringWall = false
+end
+
+local function startWallMonitor()
+    if isMonitoringWall then return end
+    isMonitoringWall = true
+
+    task.spawn(function()
+        local insideZone = false
+
+        while CONFIG.Running and globalWallPart and isMonitoringWall do
+            local _, rootPart = getCharacterParts()
+            if rootPart then
+                local currentX = rootPart.Position.X
+                local xDistance = math.abs(currentX - CONFIG.WallTriggerX)
+
+                -- Detecta entrada al margen de 8 studs de X = -13500
+                if xDistance <= 8 and not insideZone then
+                    insideZone = true
+                    wallPassesCount = wallPassesCount + 1
+                    tabs.race.StatusLabel.Text = "Estado: Punto -13500 tocado (" .. wallPassesCount .. "/2)..."
+
+                    if wallPassesCount >= 2 then
+                        removeInvisibleWall()
+                        tabs.race.StatusLabel.Text = "Estado: Muro desactivado tras el 2º paso."
+                        break
+                    end
+                elseif xDistance > 14 and insideZone then
+                    insideZone = false -- Permite registrar el segundo paso al volver a entrar
+                end
+            end
+            task.wait(0.1)
+        end
+        isMonitoringWall = false
+    end)
+end
+
+-- ==========================================
+-- SCREEN CLICK SIMULATION
+-- ==========================================
+local function simulateClick()
+    local camera = workspace.CurrentCamera
+    if not camera then return end
+    
+    local viewportSize = camera.ViewportSize
+    local centerX = math.floor(viewportSize.X / 2)
+    local centerY = math.floor(viewportSize.Y / 2)
+
+    pcall(function()
+        virtualInputManager:SendMouseButtonEvent(centerX, centerY, 0, true, game, 1)
+    end)
+    task.wait(0.01)
+    pcall(function()
+        virtualInputManager:SendMouseButtonEvent(centerX, centerY, 0, false, game, 1)
+    end)
+end
+
+-- ==========================================
+-- UI COMPONENTS & MAIN LOOP
+-- ==========================================
+tabs.race:AddLabel("CARRERA COMPLETA AUTOMATIZADA")
+tabs.race.StatusLabel = tabs.race:AddLabel("Estado: Esperando...")
+tabs.race.LaneLabel = tabs.race:AddLabel("Carril Detectado: Ninguno")
+
+local autoRaceSwitch = nil
+
+autoRaceSwitch = tabs.race:AddSwitch("Iniciar Auto Carrera", function(state)
+    CONFIG.Running = state
+    
+    if state then
+        task.spawn(function()
+            while CONFIG.Running do
+                local character, rootPart, humanoid = getCharacterParts()
+                local gym = workspace:FindFirstChild("StrongbloxianGym")
+                
+                if rootPart and humanoid and gym then
+                    -- Disable collisions on lane dividers
+                    if gym:FindFirstChild("LaneDividers") then
+                        for _, dividerPart in ipairs(gym.LaneDividers:GetDescendants()) do
+                            if dividerPart:IsA("BasePart") then dividerPart.CanCollide = false end
+                        end
+                    end
+                    
+                    -- Activar Muro Invisible y Monitor de Pasos al iniciar ciclo
+                    spawnInvisibleWall()
+                    startWallMonitor()
+                    
+                    -- PHASE 1: QUEUE ZONE
+                    tabs.race.StatusLabel.Text = "Estado: Yendo a QueueZone..."
+                    local queueZone = gym:FindFirstChild("Lobby") 
+                                  and gym.Lobby:FindFirstChild("Markers") 
+                                  and gym.Lobby.Markers:FindFirstChild("QueueZone")
+                                  
+                    if queueZone then
+                        teleportTo(queueZone.CFrame + Vector3.new(0, 3, 0))
+                    end
+                    
+                    tabs.race.StatusLabel.Text = "Estado: Esperando asignación de carril..."
+                    if not waitCancelable(4) then break end
+                    
+                    -- PHASE 2: LANE DETECTION & IMMEDIATE START
+                    local course = gym:FindFirstChild("Course")
+                    local lanes = course and course:FindFirstChild("Lanes")
+                    local finishGate = course and course:FindFirstChild("FinishGate")
+                    
+                    if lanes then
+                        local assignedLane = getClosestLane(lanes, rootPart)
+                        if assignedLane then
+                            tabs.race.LaneLabel.Text = "Carril Detectado: " .. assignedLane.Name
+                            local segments = assignedLane:FindFirstChild("Segments")
+                            
+                            if segments then
+                                local sledSegment = getTargetPart(segments:FindFirstChild("02_HeavySled"))
+                                local liftSegment = getTargetPart(segments:FindFirstChild("03_HeavyLift"))
+                                local wrestleSegment = getTargetPart(segments:FindFirstChild("04_ArmWrestle"))
+                                local fallbackFinish = getTargetPart(finishGate)
+                                
+                                if liftSegment and wrestleSegment then
+                                    local laneNumber = tonumber(string.match(assignedLane.Name, "%d+")) or 1
+                                    local exactTargetPosition = CONFIG.LaneCoordinates[laneNumber]
+                                    local exactFinishPosition = CONFIG.FinishCoordinates[laneNumber] or (fallbackFinish and fallbackFinish.Position)
+                                    
+                                    -- PHASE 3: TELEPORT TO EXACT SECTION 1 END
+                                    tabs.race.StatusLabel.Text = "Estado: TP Sección 1 (" .. assignedLane.Name .. ")..."
+                                    humanoid.PlatformStand = true
+                                    
+                                    if exactTargetPosition then
+                                        teleportTo(CFrame.new(exactTargetPosition))
+                                    elseif sledSegment then
+                                        teleportTo(sledSegment.CFrame + Vector3.new(0, 3, 0))
+                                    end
+                                    
+                                    task.wait(0.2)
+                                    humanoid.PlatformStand = false
+                                    
+                                    -- 5-SECOND WAIT AT END OF SECTION 1
+                                    for i = CONFIG.SectionWaitTime, 1, -1 do
+                                        if not CONFIG.Running then break end
+                                        tabs.race.StatusLabel.Text = "Estado: Sección 1 Finalizada (Pausa " .. i .. "s)..."
+                                        task.wait(1)
+                                    end
+                                    if not CONFIG.Running then break end
+                                    
+                                    -- PHASE 4: DRAG SLED TO WEIGHT LIFT
+                                    tabs.race.StatusLabel.Text = "Estado: Arrastrando Trineo..."
+                                    humanoid.WalkSpeed = CONFIG.DefaultWalkSpeed
+                                    task.wait(0.5)
+                                    walkTo(liftSegment.Position)
+                                    
+                                    if not CONFIG.Running then break end
+                                    
+                                    -- START CONTINUOUS CLICKS (FROM WEIGHT LIFT UNTIL FINISH)
+                                    local isClickingActive = true
+                                    task.spawn(function()
+                                        local clickInterval = 1 / CONFIG.TargetCPS
+                                        while CONFIG.Running and isClickingActive do
+                                            simulateClick()
+                                            task.wait(math.max(0.01, clickInterval - 0.01))
+                                        end
+                                    end)
+                                    
+                                    -- PHASE 5: WEIGHT LIFTING
+                                    tabs.race.StatusLabel.Text = "Estado: Levantando Pesa (Clics continuos)..."
+                                    humanoid.WalkSpeed = CONFIG.LiftWalkSpeed
+                                    teleportTo(liftSegment.CFrame + Vector3.new(0, 3, 0))
+                                    task.wait(0.2)
+                                    walkTo(wrestleSegment.Position)
+                                    
+                                    -- PHASE 6: ARM WRESTLE
+                                    if CONFIG.Running then
+                                        tabs.race.StatusLabel.Text = "Estado: Compitiendo en Pulso (Clics continuos)..."
+                                        teleportTo(wrestleSegment.CFrame + Vector3.new(0, 3, 0))
+                                        task.wait(0.2)
+                                    end
+                                    
+                                    -- PHASE 7: FINAL SPRINT TO FINISH LINE
+                                    if CONFIG.Running then
+                                        tabs.race.StatusLabel.Text = "Estado: ¡Sprint Final a Meta (Clics continuos)!"
+                                        humanoid.WalkSpeed = CONFIG.SprintWalkSpeed
+                                        if exactFinishPosition then
+                                            walkTo(exactFinishPosition)
+                                        end
+                                    end
+                                    
+                                    -- STOP CONTINUOUS CLICKS AFTER CROSSING FINISH
+                                    isClickingActive = false
+                                    removeInvisibleWall()
+                                    
+                                    tabs.race.StatusLabel.Text = "Estado: ¡Carrera Completada! Reiniciando ciclo..."
+                                    resetWalkSpeed()
+                                    task.wait(2)
+                                end
+                            end
+                        else
+                            tabs.race.LaneLabel.Text = "Carril Detectado: Fuera de la pista"
+                        end
+                    end
+                end
+                if not waitCancelable(2) then break end
+            end
+            
+            removeInvisibleWall()
+            resetWalkSpeed()
+            tabs.race.StatusLabel.Text = "Estado: Inactivo"
+            tabs.race.LaneLabel.Text = "Carril Detectado: Ninguno"
+        end)
+    else
+        removeInvisibleWall()
+        resetWalkSpeed()
+        tabs.race.StatusLabel.Text = "Estado: Inactivo"
+        tabs.race.LaneLabel.Text = "Carril Detectado: Ninguno"
+    end
+end)
+
+autoRaceSwitch:Set(false)
+
+-- ==========================================
+-- MONITOR DE TELETRANSPORTE A SALIDA (-12640, 6, -4197)
+-- ==========================================
+local lastResetTimestamp = 0
+
+task.spawn(function()
+    while task.wait(0.2) do
+        if CONFIG.Running and autoRaceSwitch and (os.clock() - lastResetTimestamp > 5) then
+            local _, rootPart = getCharacterParts()
+            if rootPart then
+                local distanceToStart = (rootPart.Position - CONFIG.StartLinePos).Magnitude
+                if distanceToStart <= CONFIG.StartLineRadius then
+                    lastResetTimestamp = os.clock()
+                    tabs.race.StatusLabel.Text = "Estado: Salida detectada (-12640, 6, -4197). Reiniciando..."
+                    task.spawn(function()
+                        autoRaceSwitch:Set(false)
+                        task.wait(0.5)
+                        autoRaceSwitch:Set(true)
+                    end)
+                end
+            end
+        end
+    end
+end)
+
+tabs.race:Show()
