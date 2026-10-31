@@ -224,7 +224,6 @@ local function runAntiLag()
         end
     end)
 end
-
 runAntiLag()
 
 -- ==========================================
@@ -242,7 +241,12 @@ local CFG = {
     wallPos = Vector3.new(-13549, 6, -4192),
     wallSize = Vector3.new(5, 20, 180),
     wallX = -13500,
-    tpFinishPos = Vector3.new(-14065, 6, -4128), -- Coordenada de TP a meta
+    
+    -- PUNTOS DE TELETRANSPORTE (Atajos en el Eje X)
+    tpLiftX = -13742,
+    tpWrestleX = -13840,
+    tpFinishX = -14001, 
+
     laneCoords = {
         [1]  = Vector3.new(-13331, 6, -4129),
         [2]  = Vector3.new(-13330, 6, -4143),
@@ -535,7 +539,6 @@ toggleSwitch = tabs.race:AddSwitch("Iniciar Auto Carrera", function(state)
                                     local targetPos = CFG.laneCoords[laneNum]
                                     local finishPos = CFG.finishCoords[laneNum] or (fallbackFinish and fallbackFinish.Position)
                                     
-                                    -- Check Line 06 to disable wall
                                     if laneNum == 6 or string.find(curLane.Name:lower(), "06") then
                                         clearWall()
                                     else
@@ -564,11 +567,26 @@ toggleSwitch = tabs.race:AddSwitch("Iniciar Auto Carrera", function(state)
                                     end
                                     if not CFG.active then break end
                                     
-                                    -- PHASE 4: DRAG SLED
+                                    -- PHASE 4: DRAG SLED & FAST TP TO LIFT
                                     tabs.race.StatusLabel.Text = "Estado: Arrastrando Trineo..."
                                     hum.WalkSpeed = CFG.normalSpeed
                                     task.wait(0.5)
+                                    
+                                    local tpLiftTriggered = false
+                                    task.spawn(function()
+                                        while CFG.active and not tpLiftTriggered do
+                                            local _, currentHrp = getChar()
+                                            if currentHrp and currentHrp.Position.X <= CFG.tpLiftX then
+                                                tpLiftTriggered = true
+                                                tabs.race.StatusLabel.Text = "Estado: TP a Levantamiento de Pesa..."
+                                                tp(liftSeg.CFrame + Vector3.new(0, 3, 0))
+                                                break
+                                            end
+                                            task.wait(0.05)
+                                        end
+                                    end)
                                     moveTo(liftSeg.Position)
+                                    tpLiftTriggered = true
                                     
                                     if not CFG.active then break end
                                     
@@ -582,12 +600,27 @@ toggleSwitch = tabs.race:AddSwitch("Iniciar Auto Carrera", function(state)
                                         end
                                     end)
                                     
-                                    -- PHASE 5: WEIGHT LIFTING
+                                    -- PHASE 5: WEIGHT LIFTING & FAST TP TO WRESTLE
                                     tabs.race.StatusLabel.Text = "Estado: Levantando Pesa (Clics continuos)..."
                                     hum.WalkSpeed = CFG.liftSpeed
                                     tp(liftSeg.CFrame + Vector3.new(0, 3, 0))
                                     task.wait(0.2)
+                                    
+                                    local tpWrestleTriggered = false
+                                    task.spawn(function()
+                                        while CFG.active and not tpWrestleTriggered do
+                                            local _, currentHrp = getChar()
+                                            if currentHrp and currentHrp.Position.X <= CFG.tpWrestleX then
+                                                tpWrestleTriggered = true
+                                                tabs.race.StatusLabel.Text = "Estado: TP a Pulso de Brazo..."
+                                                tp(wrestleSeg.CFrame + Vector3.new(0, 3, 0))
+                                                break
+                                            end
+                                            task.wait(0.05)
+                                        end
+                                    end)
                                     moveTo(wrestleSeg.Position)
+                                    tpWrestleTriggered = true
                                     
                                     -- PHASE 6: ARM WRESTLE
                                     if CFG.active then
@@ -596,29 +629,26 @@ toggleSwitch = tabs.race:AddSwitch("Iniciar Auto Carrera", function(state)
                                         task.wait(0.2)
                                     end
                                     
-                                    -- PHASE 7: SPRINT TO FINISH & FAST TP AT -14065
+                                    -- PHASE 7: SPRINT TO FINISH & FAST TP TO GOAL
                                     if CFG.active then
                                         tabs.race.StatusLabel.Text = "Estado: ¡Sprint Final a Meta (Clics continuos)!"
                                         hum.WalkSpeed = CFG.runSpeed
                                         if finishPos then
-                                            local tpTriggered = false
+                                            local tpFinishTriggered = false
                                             task.spawn(function()
-                                                while CFG.active and not tpTriggered do
+                                                while CFG.active and not tpFinishTriggered do
                                                     local _, currentHrp = getChar()
-                                                    if currentHrp then
-                                                        local distToPos = (currentHrp.Position - CFG.tpFinishPos).Magnitude
-                                                        if currentHrp.Position.X <= CFG.tpFinishPos.X or distToPos <= 12 then
-                                                            tpTriggered = true
-                                                            tabs.race.StatusLabel.Text = "Estado: TP Instantáneo a Meta (-14065)..."
-                                                            tp(CFrame.new(finishPos))
-                                                            break
-                                                        end
+                                                    if currentHrp and currentHrp.Position.X <= CFG.tpFinishX then
+                                                        tpFinishTriggered = true
+                                                        tabs.race.StatusLabel.Text = "Estado: TP Instantáneo a Meta..."
+                                                        tp(CFrame.new(finishPos))
+                                                        break
                                                     end
                                                     task.wait(0.05)
                                                 end
                                             end)
                                             moveTo(finishPos)
-                                            tpTriggered = true
+                                            tpFinishTriggered = true
                                         end
                                     end
                                     
