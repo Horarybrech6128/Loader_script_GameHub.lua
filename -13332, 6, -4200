@@ -185,12 +185,47 @@ local rs = game:GetService("RunService")
 local ws = game:GetService("Workspace")
 local vu = game:GetService("VirtualUser")
 local vim = game:GetService("VirtualInputManager")
+local lighting = game:GetService("Lighting")
 
 -- Anti-AFK
 lp.Idled:Connect(function()
     vu:CaptureController()
     vu:ClickButton2(Vector2.new())
 end)
+
+-- ==========================================
+-- ANTI LAG SYSTEM
+-- ==========================================
+local function runAntiLag()
+    pcall(function()
+        lighting.Brightness = 0
+        lighting.GlobalShadows = false
+        lighting.FogEnd = 9e9
+        for _, v in pairs(lighting:GetChildren()) do
+            if v:IsA("Sky") or v:IsA("Atmosphere") or v:IsA("BloomEffect") or v:IsA("BlurEffect") or v:IsA("ColorCorrectionEffect") or v:IsA("SunRaysEffect") then
+                v:Destroy()
+            end
+        end
+        
+        ws.Terrain.WaterTransparency = 1
+        ws.Terrain.WaterWaveSize = 0
+        ws.Terrain.WaterWaveSpeed = 0
+        
+        for _, obj in pairs(ws:GetDescendants()) do
+            if obj:IsA("BasePart") then
+                obj.Material = Enum.Material.SmoothPlastic
+                obj.Reflectance = 0
+                obj.CastShadow = false
+            elseif obj:IsA("Decal") or obj:IsA("Texture") then
+                obj.Transparency = 1
+            elseif obj:IsA("ParticleEmitter") or obj:IsA("PointLight") or obj:IsA("SpotLight") or obj:IsA("SurfaceLight") or obj:IsA("Trail") then
+                obj:Destroy()
+            end
+        end
+    end)
+end
+
+runAntiLag()
 
 -- ==========================================
 -- CONFIGURATION
@@ -207,6 +242,7 @@ local CFG = {
     wallPos = Vector3.new(-13549, 6, -4192),
     wallSize = Vector3.new(5, 20, 180),
     wallX = -13500,
+    tpFinishPos = Vector3.new(-14065, 6, -4128), -- Coordenada de TP a meta
     laneCoords = {
         [1]  = Vector3.new(-13331, 6, -4129),
         [2]  = Vector3.new(-13330, 6, -4143),
@@ -560,12 +596,29 @@ toggleSwitch = tabs.race:AddSwitch("Iniciar Auto Carrera", function(state)
                                         task.wait(0.2)
                                     end
                                     
-                                    -- PHASE 7: SPRINT TO FINISH
+                                    -- PHASE 7: SPRINT TO FINISH & FAST TP AT -14065
                                     if CFG.active then
                                         tabs.race.StatusLabel.Text = "Estado: ¡Sprint Final a Meta (Clics continuos)!"
                                         hum.WalkSpeed = CFG.runSpeed
                                         if finishPos then
+                                            local tpTriggered = false
+                                            task.spawn(function()
+                                                while CFG.active and not tpTriggered do
+                                                    local _, currentHrp = getChar()
+                                                    if currentHrp then
+                                                        local distToPos = (currentHrp.Position - CFG.tpFinishPos).Magnitude
+                                                        if currentHrp.Position.X <= CFG.tpFinishPos.X or distToPos <= 12 then
+                                                            tpTriggered = true
+                                                            tabs.race.StatusLabel.Text = "Estado: TP Instantáneo a Meta (-14065)..."
+                                                            tp(CFrame.new(finishPos))
+                                                            break
+                                                        end
+                                                    end
+                                                    task.wait(0.05)
+                                                end
+                                            end)
                                             moveTo(finishPos)
+                                            tpTriggered = true
                                         end
                                     end
                                     
